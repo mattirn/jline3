@@ -14,6 +14,7 @@ import org.jline.terminal.Terminal;
 import org.jline.terminal.impl.jna.win.JnaWinSysTerminal;
 import org.jline.terminal.spi.JnaSupport;
 import org.jline.terminal.spi.Pty;
+import org.jline.utils.OSUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -45,8 +46,12 @@ public class JnaSupportImpl implements JnaSupport {
     }
 
     @Override
-    public boolean isConsoleOutput(boolean pty) {
-        return pty ? JnaNativePty.isConsoleOutput() : JnaWinSysTerminal.isConsoleOutput();
+    public boolean isConsoleOutput() {
+        return (OSUtils.IS_WINDOWS && JnaWinSysTerminal.isConsoleOutput()) || JnaNativePty.isConsoleOutput();
     }
 
+    @Override
+    public boolean isConsoleInput() {
+        return (OSUtils.IS_WINDOWS && JnaWinSysTerminal.isConsoleInput()) || JnaNativePty.isConsoleInput();
+    }
 }
